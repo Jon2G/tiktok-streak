@@ -46,7 +46,7 @@ def login_tiktok(browser, wait, username, password):
 def get_all_friends(browser, wait):
     browser.get('https://www.tiktok.com/messages?lang=vi')
 
-    all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-2tydh5-PInfoNickname")))
+    all_user = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[class*='PInfoNickname']")))
 
     target_friend = os.getenv('TIKTOK_FRIEND_USERNAME')
     print(f"Target friend: {target_friend}")
@@ -55,7 +55,7 @@ def get_all_friends(browser, wait):
     for user in all_user:
         user.click()
         time.sleep(2)
-        profile_element = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-1qxabns-StyledLink")))[0]
+        profile_element = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[class*='StyledLink']")))[0]
         href = profile_element.get_attribute("href")
         username = re.search(r"/@(.+)", href).group(1)
         
@@ -71,12 +71,12 @@ def auto_send_message(browser, wait):
     
     my_friends = [os.getenv('TIKTOK_FRIEND_USERNAME')]
 
-    all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-ncyd6r-5e6d46e3--PInfoNickname")))
+    all_user = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[class*='PInfoNickname']")))
 
     for user in all_user:
         user.click()
         time.sleep(2)
-        profile_element = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-grljh8-5e6d46e3--StyledLink")))[0]
+        profile_element = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[class*='StyledLink']")))[0]
         href = profile_element.get_attribute("href")
         username = re.search(r"/@(.+)", href).group(1)
 
