@@ -17,21 +17,15 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Set up environment variables
+      - name: Create .env file
         run: |
-          echo "CAPTCHA_API_KEY=${{ secrets.CAPTCHA_API_KEY }}" >> $GITHUB_ENV
-          echo "TIKTOK_USERNAME=${{ secrets.TIKTOK_USERNAME }}" >> $GITHUB_ENV
-          echo "TIKTOK_PASSWORD=${{ secrets.TIKTOK_PASSWORD }}" >> $GITHUB_ENV
-          echo "MESSAGE=${{ secrets.MESSAGE }}" >> $GITHUB_ENV
-          echo "TIKTOK_FRIEND_USERNAME=${{ secrets.TIKTOK_FRIEND_USERNAME }}" >> $GITHUB_ENV
-
-      - name: Write environment variables to .env file
-        run: |
-          echo "CAPTCHA_API_KEY=${{ secrets.CAPTCHA_API_KEY }}" > .env
-          echo "TIKTOK_USERNAME=${{ secrets.TIKTOK_USERNAME }}" >> .env
-          echo "TIKTOK_PASSWORD=${{ secrets.TIKTOK_PASSWORD }}" >> .env
-          echo "MESSAGE=${{ secrets.MESSAGE }}" >> .env
-          echo "TIKTOK_FRIEND_USERNAME=${{ secrets.TIKTOK_FRIEND_USERNAME }}" >> .env
+          cat > .env << EOF
+          CAPTCHA_API_KEY=${{ secrets.CAPTCHA_API_KEY }}
+          TIKTOK_USERNAME=${{ secrets.TIKTOK_USERNAME }}
+          TIKTOK_PASSWORD=${{ secrets.TIKTOK_PASSWORD }}
+          MESSAGE=${{ secrets.MESSAGE }}
+          TIKTOK_FRIEND_USERNAME=${{ secrets.TIKTOK_FRIEND_USERNAME }}
+          EOF
 
       - name: Run the script
         run: python main.py
