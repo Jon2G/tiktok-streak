@@ -15,7 +15,11 @@ load_dotenv()
 def init_browser():
     chrome_options = Options()
     chrome_options.add_argument("--disable-notifications")
-    chrome_options.add_argument("--headless=new")
+    
+    # Only run headless if DEBUG is not set
+    if not os.getenv('DEBUG'):
+        chrome_options.add_argument("--headless=new")
+    
     browser = webdriver.Chrome(options=chrome_options)
 
     wait = WebDriverWait(browser, 20)
@@ -28,19 +32,26 @@ def login_tiktok(browser, wait, username, password):
     
     actions = ActionChains(browser, duration=550)
 
-    try:
-        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
-        password_field = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[autocomplete="new-password"]')))
-        password_field.send_keys(password)
-        wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "tiktok-11sviba-Button-StyledButton"))).click()
-        time.sleep(3)
-        user_api_key = os.getenv('CAPTCHA_API_KEY')
-        print(user_api_key)
-        number_captcha_attempts = 10
-        action_type = 'tiktokcircle'
-        oca_solve_captcha(browser, actions, user_api_key, action_type, number_captcha_attempts)
-    except:
-        print("You have logged in")
+    
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
+    time.sleep(3)
+    password_field = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[autocomplete="new-password"]')))
+    time.sleep(3)
+    password_field.send_keys(password)
+    time.sleep(3)
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[class*='StyledButton']"))).click()
+    time.sleep(3)
+    #if we found a div with the property "type=error" click again the button
+    if wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type='error']"))):
+        error("Not logged in")
+
+    user_api_key = os.getenv('CAPTCHA_API_KEY')
+    print(user_api_key)
+    number_captcha_attempts = 10
+    action_type = 'tiktokcircle'
+    oca_solve_captcha(browser, actions, user_api_key, action_type, number_captcha_attempts)
+    time.sleep(300000)
+    
 
 
 def get_all_friends(browser, wait):
