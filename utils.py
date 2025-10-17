@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-import time, re, csv, os
+import time, re, os
 from dotenv import load_dotenv
 from ocacaptcha import oca_solve_captcha
 
@@ -48,8 +48,9 @@ def get_all_friends(browser, wait):
 
     all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-2tydh5-PInfoNickname")))
 
-    my_friends = []
-    my_friends.append(os.getenv('TIKTOK_FRIEND_USERNAME'))
+    target_friend = os.getenv('TIKTOK_FRIEND_USERNAME')
+    print(f"Target friend: {target_friend}")
+    print("\nAll available friends:")
 
     for user in all_user:
         user.click()
@@ -57,14 +58,9 @@ def get_all_friends(browser, wait):
         profile_element = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-1qxabns-StyledLink")))[0]
         href = profile_element.get_attribute("href")
         username = re.search(r"/@(.+)", href).group(1)
-
-        with open('friends.csv', mode='a', newline='') as file:
-            if username in my_friends:
-                continue
-            writer = csv.writer(file)
-            if file.tell() == 0:
-                writer.writerow(['Username'])
-            writer.writerow([username])
+        
+        status = "✓ TARGET" if username == target_friend else ""
+        print(f"  - {username} {status}")
 
     browser.quit()
 
@@ -73,10 +69,7 @@ def auto_send_message(browser, wait):
     browser.get('https://www.tiktok.com/messages?lang=vi')
 
     
-    my_friends = []
-    with open('friends.csv', mode='r', newline='') as file:
-        reader = csv.DictReader(file)
-        my_friends = [row['Username'] for row in reader]
+    my_friends = [os.getenv('TIKTOK_FRIEND_USERNAME')]
 
     all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-1mez8np-PInfoNickname")))
 
