@@ -49,9 +49,7 @@ def get_all_friends(browser, wait):
     all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-2tydh5-PInfoNickname")))
 
     my_friends = []
-    with open('friends.csv', mode='r', newline='') as file:
-        reader = csv.DictReader(file)
-        my_friends = [row['Username'] for row in reader]
+    my_friends.append(os.getenv('TIKTOK_FRIEND_USERNAME'))
 
     for user in all_user:
         user.click()
