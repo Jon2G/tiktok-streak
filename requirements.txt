@@ -1,4 +1,4 @@
 selenium>=4.15.0
 python-dotenv>=1.0.0
-ocacaptcha==0.2.3
+ocacaptcha>=0.2.3
 
