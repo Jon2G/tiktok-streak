@@ -2,6 +2,9 @@ name: Save my streak
 on:
   schedule:
     - cron: '11 * * * *' # Run at 11:* every day
+  push:
+    branches:
+      - dev
 jobs:
   send-message:
     runs-on: ubuntu-latest
