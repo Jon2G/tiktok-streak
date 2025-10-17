@@ -71,7 +71,7 @@ def auto_send_message(browser, wait):
     
     my_friends = [os.getenv('TIKTOK_FRIEND_USERNAME')]
 
-    all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, ".css-ncyd6r-5e6d46e3--PInfoNickname")))
+    all_user = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "css-ncyd6r-5e6d46e3--PInfoNickname")))
 
     for user in all_user:
         user.click()
